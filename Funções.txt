@@ -1,0 +1,22 @@
+Definindo Funções:
+
+// Na definição da função soma temos 2 parametros: a e b, onde definimos seus tipos separados por :(dois pontos) e o tipo de retorno(que também é opcional) Int.
+// Em seguida temos corpo da função. reparem que não utilizamos a palavra chave 'return' pois em Scala a última linha executada é retornada e o tipo de retorno da 
+função(se não declaramos) é inferido.
+
+	def soma(a: Int, b: Int): Int { a+b }
+	//executando a função:
+	val resultado = soma(1,1)
+	println(resultado)
+	// 2
+
+Funções como Parâmetro
+
+Em Scala, funções também são objetos, logo podemos passar funções como parâmetros em outras funções. Vejamos um exemplo utilizando a função map em listas, 
+a qual recebe uma função que receba um parâmetro e retorne o mesmo tipo do parâmetro:
+
+// Função que eleva um número ao quadrado
+	def aoQuadrado(a: Int): Int = { a * a }
+	val lista = List(1,2,3,4,5)
+	val resultado = lista.map(aoQuadrado)
+// List[Int] = List(1, 4, 9, 16, 25)

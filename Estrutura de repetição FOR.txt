@@ -1,0 +1,47 @@
+Expressão: for (variavel <- iterador) yield outraExpressão
+
+Loop: for (variavel <- iterador) { /* corpo do loop */ }
+
+Na expressão for não há um corpo de código que segue, a usamos apenas para fornecer a yield um valor a cada iteração e o resultado da expressão é uma coleção de valores.
+
+Já o loop for possui um corpo, o qual pode realizar tarefas repetidas de acordo com o iterador fornecido. O loop for não retorna um valor, o usamos apenas para obter os efeitos do código 
+que será repetido no corpo.
+
+Vejamos um exemplo:
+// dará erro, o loop for retorna Unit
+val x = for (a <- 1 to 100) { // realiza alguma tarefa de 1 a 100 inclusive } // já a expressão for possui um valor de retorno val y = for (a <- 1 to 100) yield a * 2
+
+A primeira sintaxe de for não retornará qualquer valor usável. Para que o compilador aceite aquela sintaxe seria preciso declarar x como Unit, o que anularia sua utilidade.
+
+Já a expressão for demonstrada em seguida possui valor de retorno determinado por yield a * 2. Neste caso, cada item a * 2 é um inteiro. A expressão for agrupa todos os valores de retorno 
+em uma nova coleção imutável. Como não especificamos um tipo de coleção específico, o compilador segue seu próprio algoritmo para inferir sobre qual tipo de coleção deve retornar. 
+Neste caso obtemos um Vector[Int].
+
+Expressões com filtros
+A expressão for pode conter lógica mais sofisticada que apenas a iteração em coleções. As coleções podem ser combinadas e filtradas de diversas formas distintas. Vejamos alguns exemplos.
+// apenas números pares de 1 a 100
+val z = for (a <- 1 to 100 if ((a % 2) == 0)) yield a
+
+Nesse exemplo a irá variar de 1 a 100, enquanto que um filtro envia a yield apenas os valores de a que sejam divisíveis por 2.
+
+Podemos realizar computações mais elaboradas dentro da expressão for, como encontrar facilmente todos os triângulos retângulos tendo lados com medidas entre 1 e 100:
+val pitagoricos = for {
+hipotenusa <- 1 to 100; cat1 <- 1 to hipotenusa; cat2 <- 1 to cat1 if ((cat1 * cat1 + cat2 * cat2) == hipotenusa * hipotenusa) } yield (cat2, cat1, hipotenusa)
+
+Este código retorna um Vector[(Int,Int,Int)] onde cada item é um trio(ou 3-tupla) do tipo (Int,Int,Int). A expressão acima demonstra o poder da expressão for como geradora de coleções.
+
+Em bibliotecas como Slick, as expressões for mostram-se ainda mais versáteis. No exemplo a seguir, Discos é uma tabela Slick definida anteriormente. Uma consulta à nossa coleção de discos 
+ficaria assim:
+val prediletos = for {
+disco <- Query(Discos) if (disco.tocagens >= 20)
+}
+yield disco
+
+Neste exemplo, prediletos será um Vector[Discos] contendo todos os discos obtidos do banco de dados os quais foram tocados 20 ou mais vezes. A biblioteca slick gera o código da consulta 
+SQL à partir da "compreensão for"(a expressão contida entre chaves) e retorna uma coleção Scala de forma totalmente transparente.
+
+Conclusão
+A expressão for difere do loop for por sua sintaxe. Loops for em Scala seguem sintaxe semelhante à de C e Java, e assim como nessas linguagens não retorna qualquer valor usável. 
+Já a expressão for difere do loop pois não tem um corpo para ser executado mas a palavra yield em seu lugar. Esta última permite a geração de novas coleções, 
+filtragem, processamento numérico e combinações cartesianas de conjuntos de forma fácil e rápida. O exemplo da geração de triângulos retângulos e a consulta simulada a uma tabela 
+Slick demonstram a simplicidade com que expressão for é capaz de efetuar tarefas úteis.

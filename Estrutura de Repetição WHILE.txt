@@ -1,0 +1,18 @@
+loop do tipo while é similar ao que encontramos em Java. Dada uma condição, enquanto a mesma for verdadeira, um determinado bloco de expressões é executado em quantidade 
+indeterminada de repetições. Por exemplo:
+
+var i = 2
+i: Int = 2
+ 
+var n = 5
+n: Int = 5
+ 
+scala> while (n > 0) { i = i * n; n -= 1; println(i) }
+10
+40
+120
+240
+240
+Se quisermos verificar a condição apenas após a primeira execução do bloco, não há mistério. Basta utilizar a sintaxe do/while.
+
+do { i = i * n; n -= 1; println(i) } while (n > 0)

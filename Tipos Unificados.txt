@@ -1,0 +1,40 @@
+﻿Em Scala, todos os valores têm um tipo, incluindo valores numéricos e funções
+Any é o supertipo de todos os tipos, também chamado de tipo superior. Ele define certos métodos universais, como equals, hashCode, e toString. Anytem duas subclasses diretas: AnyVale AnyRef.
+
+AnyVal representa tipos de valor. Há nove tipos de valores pré-definidos e são não-nulo: Double, Float, Long, Int, Short, Byte, Char, Unit, e Boolean. Unité um tipo de valor que não contém informações significativas. Não é exatamente um exemplo de Unitque pode ser declarada literalmente assim: (). Todas as funções devem retornar algo assim às vezes Unité um tipo de retorno útil.
+
+AnyRef representa tipos de referência. Todos os tipos de não valor são definidos como tipos de referência. Todo tipo definido pelo usuário no Scala é um subtipo de AnyRef. Se Scala é usado no contexto de um ambiente de tempo de execução Java, AnyRefcorresponde a java.lang.Object.
+
+Aqui está um exemplo que demonstra que cadeias, números inteiros, caracteres, valores booleanos e funções são todos objetos como qualquer outro objeto:
+
+val list: List[Any] = List(
+  "a string",
+  732,  // an integer
+  'c',  // a character
+  true, // a boolean value
+  () => "an anonymous function returning a string"
+)
+list.foreach(element => println(element))
+Ele define uma variável listde tipo List[Any]. A lista é inicializada com elementos de vários tipos, mas todos são instância de scala.Any, para que você possa adicioná-los à lista.
+
+Aqui está a saída do programa:
+
+a string
+732
+c
+true
+<function>
+Tipo Casting
+Os tipos de valor podem ser lançados da seguinte maneira: Hierarquia de tipos Scala
+
+Por exemplo:
+
+val x: Long = 987654321
+val y: Float = x  // 9.8765434E8 (note that some precision is lost in this case)
+val face: Char = '☺'
+val number: Int = face  // 9786
+A fundição é unidirecional. Isso não compilará:
+
+val x: Long = 987654321
+val y: Float = x  // 9.8765434E8
+val z: Long = y  // Does not conform

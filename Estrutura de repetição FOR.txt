@@ -1,47 +1,66 @@
-Expressão: for (variavel <- iterador) yield outraExpressão
+scala> for (x <- 1 to 5) { print("-"+x) }
+-1-2-3-4-5
+Todo for do Scala é baseado na sintaxe “for (i <- expr)”, onde “i <- expr” é uma expressão conhecida como generator. Generators são construtores de coleções de itens, 
+onde cada item da coleção será referenciado pela variável i (ou como você quiser chamar). Percebeu a expressão “1 to 5”? 
+Lembra das conversões implícitas fornecidas pelo compilador Scala? No caso, o número inteiro “1” (uma instância de RichInt) tem um método chamado to,
+ que recebe como argumento um número inteiro e tem como retorno uma coleção do tipo Range, um intervalo de números inteiros ordenados.
 
-Loop: for (variavel <- iterador) { /* corpo do loop */ }
+É bem comum percorrer uma coleção de números até o penúltimo elemento, o famoso “i < n”. Se este é o caso, basta utilizar o método until ao invés do to:
 
-Na expressão for não há um corpo de código que segue, a usamos apenas para fornecer a yield um valor a cada iteração e o resultado da expressão é uma coleção de valores.
+scala> for (x <- 1 until 5) { print("-"+x) }
+-1-2-3-4
+Qualquer coleção Scala é válida para uso com a cláusula for. Por exemplo, podemos inspecionar a lista de arquivos da pasta atual.
 
-Já o loop for possui um corpo, o qual pode realizar tarefas repetidas de acordo com o iterador fornecido. O loop for não retorna um valor, o usamos apenas para obter os efeitos do código 
-que será repetido no corpo.
 
-Vejamos um exemplo:
-// dará erro, o loop for retorna Unit
-val x = for (a <- 1 to 100) { // realiza alguma tarefa de 1 a 100 inclusive } // já a expressão for possui um valor de retorno val y = for (a <- 1 to 100) yield a * 2
+scala> val homeFiles = (new java.io.File(".")).listFiles
+homeFiles: Array[java.io.File] = Array(./target)
+ 
+scala> for (aFile <- homeFiles) { println(aFile) }
+./target
+Da mesma maneira como ocorre com identificadores, o compilador Scala infere o tipo da variável que referencia os elementos da coleção, mas é claro que você pode explicitar o tipo, 
+se quiser.
 
-A primeira sintaxe de for não retornará qualquer valor usável. Para que o compilador aceite aquela sintaxe seria preciso declarar x como Unit, o que anularia sua utilidade.
+Cláusulas for também permitem a aplicação de filtros ou guards aos generators em questão. Com isso, é possível aplicar critérios de seleção aos elementos que serão entregues 
+ao bloco que será executado. Por exemplo, podemos iterar apenas sobre os números pares de uma coleção:
 
-Já a expressão for demonstrada em seguida possui valor de retorno determinado por yield a * 2. Neste caso, cada item a * 2 é um inteiro. A expressão for agrupa todos os valores de retorno 
-em uma nova coleção imutável. Como não especificamos um tipo de coleção específico, o compilador segue seu próprio algoritmo para inferir sobre qual tipo de coleção deve retornar. 
-Neste caso obtemos um Vector[Int].
+scala> for (i <- 1 to 10 if i % 2 == 0) { print("(%s)".format(i)) }
+(2)(4)(6)(8)(10)
+Podemos ser mais seletivos e especificar vários critérios diferentes, separados por ponto-e-vírgula:
 
-Expressões com filtros
-A expressão for pode conter lógica mais sofisticada que apenas a iteração em coleções. As coleções podem ser combinadas e filtradas de diversas formas distintas. Vejamos alguns exemplos.
-// apenas números pares de 1 a 100
-val z = for (a <- 1 to 100 if ((a % 2) == 0)) yield a
 
-Nesse exemplo a irá variar de 1 a 100, enquanto que um filtro envia a yield apenas os valores de a que sejam divisíveis por 2.
+scala> for (i <- 1 to 10 if i % 2 == 0; if i >= 6) {
+         print("(%s)".format(i))
+       }
+(6)(8)(10)
+E quando precisamos trabalhar com nested loops? Em Java, é comum encontrar coisas assim:
 
-Podemos realizar computações mais elaboradas dentro da expressão for, como encontrar facilmente todos os triângulos retângulos tendo lados com medidas entre 1 e 100:
-val pitagoricos = for {
-hipotenusa <- 1 to 100; cat1 <- 1 to hipotenusa; cat2 <- 1 to cat1 if ((cat1 * cat1 + cat2 * cat2) == hipotenusa * hipotenusa) } yield (cat2, cat1, hipotenusa)
 
-Este código retorna um Vector[(Int,Int,Int)] onde cada item é um trio(ou 3-tupla) do tipo (Int,Int,Int). A expressão acima demonstra o poder da expressão for como geradora de coleções.
-
-Em bibliotecas como Slick, as expressões for mostram-se ainda mais versáteis. No exemplo a seguir, Discos é uma tabela Slick definida anteriormente. Uma consulta à nossa coleção de discos 
-ficaria assim:
-val prediletos = for {
-disco <- Query(Discos) if (disco.tocagens >= 20)
+for (int i=0; i<10; i++) {
+  for (int j=0; j<15; j++) {
+    //Faça alguma coisa com os dois índices
+  }
 }
-yield disco
+O mesmo loop em Scala, em apenas uma linha, aplicando múltiplos generators dentro da mesma cláusula for:
 
-Neste exemplo, prediletos será um Vector[Discos] contendo todos os discos obtidos do banco de dados os quais foram tocados 20 ou mais vezes. A biblioteca slick gera o código da consulta 
-SQL à partir da "compreensão for"(a expressão contida entre chaves) e retorna uma coleção Scala de forma totalmente transparente.
 
-Conclusão
-A expressão for difere do loop for por sua sintaxe. Loops for em Scala seguem sintaxe semelhante à de C e Java, e assim como nessas linguagens não retorna qualquer valor usável. 
-Já a expressão for difere do loop pois não tem um corpo para ser executado mas a palavra yield em seu lugar. Esta última permite a geração de novas coleções, 
-filtragem, processamento numérico e combinações cartesianas de conjuntos de forma fácil e rápida. O exemplo da geração de triângulos retângulos e a consulta simulada a uma tabela 
-Slick demonstram a simplicidade com que expressão for é capaz de efetuar tarefas úteis.
+scala> for (i <- 1 until 10; j <- 1 until 15) {
+         //Fazendo alguma coisa com i e j
+       }
+Nada impede, inclusive, que generators façam referências a outros generators. Também é possível aplicar filtros aos vários generators de um for. Para isso, precisamos inserir quebras 
+de linha, como no exemplo abaixo:
+
+
+scala> for (i <- 1 until 10 if i % 2 == 0; j <- 1 until 15 if j != i) {
+         //Fazendo alguma coisa com i e j, onde j depende do valor de i
+       }
+Além de tudo isso, o for em Scala ainda pode produzir coleções de valores, a partir dos resultados apurados em cada iteração do loop. Este tipo de loop é chamado de for comprehension. 
+Para isso, basta incluir a cláusula yield logo antes da expressão a ser executada no loop. Podemos, por exemplo, “dobrar” uma coleção de inteiros, sem muito código.
+
+
+scala> for (i <- 1 to 10) yield i * 2
+res5: IndexedSeq[Int] = Vector(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
+Podemos realizar qualquer operação e o resultado do bloco, em cada iteração, será apurado para construir a coleção final.
+
+
+scala> for (i <- 1 to 10) yield { val x = i * 2; x + 5 }
+res6: IndexedSeq[Int] = Vector(7, 9, 11, 13, 15, 17, 19, 21, 23, 25)

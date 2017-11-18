@@ -1,0 +1,36 @@
+package main
+   
+  object Main {
+    
+    def fazConta(callback: (Int,Int) => Int, x:Int, y:Int) {
+        println(callback(x, y))
+    }
+   
+    def soma(x: Int, y: Int ): Int = {
+       x + y
+    }
+    
+    def multiplicacao(x:Int, y:Int) : Int = {
+      x * y
+    }
+    
+    def divisao(x:Int, y:Int) : Int = {
+      x * y
+    }
+       
+    def subtracao(x:Int, y:Int) : Int = {
+      x * y
+    }
+    
+    def main(args: Array[String]) {
+      println("Realiza as operações matemáticas:")
+      fazConta(soma, 5, 3);
+      fazConta(multiplicacao, 5,3);
+      fazConta(divisao, 5,3);
+      fazConta(subtracao, 5,3);
+    }
+  }
+
+Note que a declaração de uma função em Scala tem algumas diferenças relevantes em relação ao Java. Primeiro é utilizada a palavra reservada def e depois é definido o nome da função, 
+os parâmetros e, por fim, o tipo do retorno da função. Note também que em Scala, apesar de permitido, não é preciso colocar o return, pois é assumido que o valor do último comando da 
+função é utilizado para retorno. Caso seja desejado que a função não retorne nada, é utilizado o tipo Unit na declaração do retorno da função.

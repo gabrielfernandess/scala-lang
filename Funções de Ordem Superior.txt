@@ -1,0 +1,6 @@
+Scala permite a definição de funções de ordem superior. Estas são funções que tomam outras funções como parâmetros , ou cujo resultado é uma função . 
+Aqui está uma função applyque leva outra função fe um valor ve aplica a função fpara v:
+
+def cubo(x:Int):Int=x*x*x
+def soma(f:Int=>Int,a:Int,b:Int):Int=f(a) + f(b)
+def somaCubos(a:Int,b:Int) = soma(cubo,a,b)

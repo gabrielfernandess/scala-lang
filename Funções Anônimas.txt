@@ -1,0 +1,32 @@
+package main
+   
+  object Main2 {
+    def fazConta(callback: (Int, Int) => Int, x: Int, y: Int) {
+      println(callback(x, y))
+    }
+   
+    def contaUmDez(f: (Int) => Unit) {
+      for (i <- 1 to 10) f(i)
+    }
+    def main(args: Array[String]) {
+   
+      println("Realiza as operações matemáticas")
+      fazConta((x, y) => x + y, 5, 6)
+      fazConta((x, y) => x * y, 5, 3);
+      fazConta((x, y) => x / y, 5, 3);
+      fazConta((x, y) => x - y, 5, 3);
+      
+      println("Conta até 10")
+      contaUmDez(i => println(i))
+    }
+  } 
+
+A sintaxe para a utilização de funções anônimas é bastante simples: inicialmente são colocados os parâmetros da função. Como no exemplo, o val1 e val2, 
+e depois o símbolo => são utilizados para as funções anônimas. Caso a função tenha apenas uma linha, basta escrever o código diretamente, caso contrário,
+ podem ser utilizadas chaves para a criação de um bloco de código. Note que mesmo utilizando funções anônimas, a declaração do parâmetro na função fazConta
+ e a função passada como parâmetro na chamada do método tem a mesma estrutura, número de parâmetros e tipo de retorno.
+
+Funções anônimas são muito utilizadas para trabalhar com coleções de dados e para realizar diferentes operações nessas coleções, como por exemplo, filtragem
+ e mapeamento dos dados. A Listagem 6 mostra funções anônimas utilizadas com coleções de dados, onde primeiro é definida a função printList, que recebe como
+ parâmetro uma função e uma lista de inteiros. No main, a primeira coisa é a definição da lista com algumas idades, depois há duas chamadas para o método printList: 
+uma que apenas imprime as idades, e outra que imprime as idades multiplicadas por dois.
